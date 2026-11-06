@@ -1,0 +1,47 @@
+# Environment files with secrets
+.env
+.env.local
+.env.production
+.env.dleer
+*.env
+
+# Credentials
+config/nas-credentials
+config/credentials
+*credentials*
+*.key
+*.pem
+*.crt
+
+# Cloudflare
+.cloudflared/
+*.json
+tunnel-token.txt
+
+# Docker volumes (local data)
+volumes/
+data/
+
+# Generated files
+docker/docker-compose.yml
+
+# Backup files
+*.backup
+*.bak
+*.old
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+tmp/
+temp/
+*.tmp

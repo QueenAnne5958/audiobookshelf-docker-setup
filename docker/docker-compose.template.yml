@@ -1,0 +1,44 @@
+version: '3.8'
+
+networks:
+  audiobookshelf-net:
+    driver: bridge
+
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    container_name: ${CONTAINER_NAME}
+    restart: unless-stopped
+    environment:
+      - TZ=${TIMEZONE}
+      - PORT=${ABS_PORT}
+    ports:
+      - "${ABS_PORT}:${ABS_PORT}"
+    volumes:
+      - ${ABS_CONFIG_PATH}:/config
+      - ${ABS_METADATA_PATH}:/metadata
+      - ${ABS_AUDIOBOOKS_PATH}:/audiobooks
+      - ${ABS_PODCASTS_PATH}:/podcasts
+      # Optional: Mount NAS if configured
+      # - ${NAS_MOUNT_POINT}:/nas-audiobooks:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '${CPU_LIMIT}'
+          memory: ${MEMORY_LIMIT}
+        reservations:
+          cpus: '${CPU_RESERVATION}'
+          memory: ${MEMORY_RESERVATION}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - audiobookshelf-net
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:${ABS_PORT}/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
